@@ -5,16 +5,18 @@
 package Core.OpenGL.Shaders;
 
 import org.lwjgl.opengl.ARBShaderObjects;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL11;
 
 /**
  *
  * @author ryanf
  */
-public abstract class ShaderProgram
+public abstract class ShaderPart
 {
     private int shaderID = 0;
     
-    protected ShaderProgram(String sourceCode, int shaderType) throws Exception
+    protected ShaderPart(String sourceCode, int shaderType) throws Exception
     {
 	// ShaderID will be non zero if succefully created
 	shaderID = ARBShaderObjects.glCreateShaderObjectARB(shaderType);
@@ -30,20 +32,20 @@ public abstract class ShaderProgram
 
 	ARBShaderObjects.glShaderSourceARB(shaderID, sourceCode);
 	ARBShaderObjects.glCompileShaderARB(shaderID);
-	
-	/*
-	 * Check the shader was created
-	 */	
-	int shaderLength = ARBShaderObjects.glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB);	
-	if(shaderLength != 0)
+	int logLength = ARBShaderObjects.glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB);	
+	String log = "";
+	if(logLength != 0)
 	{
-	    /*
-	     * Bad shader.
-	     * Read the shader log out
-	     */
-	    System.out.println("Shader log: " + ARBShaderObjects.glGetInfoLogARB(shaderID, shaderLength));
-	    throw new Exception("Could not create shader object - code: " + sourceCode);
-	}	
+	    log = ARBShaderObjects.glGetInfoLogARB(shaderID, logLength);
+	}
+	if(GL20.glGetShader(shaderID, GL20.GL_COMPILE_STATUS) != GL11.GL_TRUE)
+	{
+	    throw new Exception("Program did not compile. " + log);
+	}
+	if(logLength != 0)
+	{
+	    System.out.print("\nCompile log:\n " + log + "\n");
+	}
     }
     
     int shaderID()
