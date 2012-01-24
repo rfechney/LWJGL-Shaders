@@ -1,34 +1,34 @@
-varying vec3 lightVec;
-varying vec3 halfVec;
-//varying vec3 eyeVec;
+varying vec3 lightTS;
+varying vec3 halfTS;
 varying vec2 texCoord;
 
-attribute vec3 u;
-attribute vec3 v;
-attribute vec3 w;
-uniform vec4 lightSource;
+attribute vec3 uMS;
+attribute vec3 vMS;
+attribute vec3 wMS;
+attribute vec4 lightMS;
 
 void main()
 {
 	texCoord = gl_MultiTexCoord0.st;
 
-	vec3 vertexPosition = vec3(gl_ModelViewMatrix * gl_Vertex);
-	vec3 lightDir = normalize(lightSource.xyz - vertexPosition);	
+	// Find light direction in modelspace
+	vec3 lightMS = normalize(lightMS.xyz - gl_Vertex.xyz);
+
+	// Find eye direction in modelspace
+	vec3 eyeMS = -normalize((gl_ModelViewMatrix * gl_Vertex).xyz);
+	vec3 halfMS = normalize(eyeMS + lightMS);
 		
-	// transform light and half angle vectors by tangent basis
-	lightVec.x = dot(lightDir, u);
-	lightVec.y = dot(lightDir, v);
-	lightVec.z = dot(lightDir, w);
-	lightVec = normalize(lightVec);
-	
-	vertexPosition = normalize(vertexPosition);
-	
-	// Normalize the halfVector to pass it to the fragment shader
-	vec3 halfVector = vertexPosition + lightDir;
-	halfVec.x = dot(halfVector, u);
-	halfVec.y = dot(halfVector, v);
-	halfVec.z = dot(halfVector, w);
-	halfVector = normalize(halfVector);
-  
+	// transform light, half and eye vectors by tangent basis
+	lightTS.x = dot(lightMS, uMS);
+	lightTS.y = dot(lightMS, vMS);
+	lightTS.z = dot(lightMS, wMS);
+	lightTS = normalize(lightTS);
+
+	halfTS.x = dot(halfMS, uMS);
+	halfTS.y = dot(halfMS, vMS);
+	halfTS.z = dot(halfMS, wMS);
+	halfTS = normalize(halfTS);
+
+	// Done.  Do transform.
 	gl_Position = ftransform();
 }

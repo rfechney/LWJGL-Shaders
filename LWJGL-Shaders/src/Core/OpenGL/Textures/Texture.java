@@ -1,5 +1,30 @@
+/*
+Copyright (c) 2011, Ryan Fechney - ryan.fechney gmail
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met: 
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer. 
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution. 
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 /**
- * A texture to be bound within JOGL. This object is responsible for 
+ * A texture to be bound within LWJGL. This object is responsible for 
  * keeping track of a given OpenGL texture and for calculating the
  * texturing mapping coordinates of the full image.
  * 
@@ -9,7 +34,7 @@
  * sprite against the texture.
  * @author Ryan Fechney
  * 
- * Based on prior work from
+ * Inspired by previous work done by
  * @author Kevin Glass
  * @author Brian Matzon
  */
@@ -17,12 +42,12 @@ package Core.OpenGL.Textures;
 
 import org.lwjgl.opengl.GL11;
 import java.awt.image.BufferedImage;
-//import java.awt.image.WritableRaster;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import Core.OpenGL.Colour;
+import org.lwjgl.opengl.GL13;
 
 public class Texture
 {
@@ -227,20 +252,25 @@ public class Texture
     /**
      * Bind the specified GL context to a texture
      */
-    public void bind()
+    public void bind(int index)
     {
+	GL13.glActiveTexture(GL13.GL_TEXTURE0 + index);
         if (uploaded == false)
         {
             uploadToOpenGL();
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+	else
+	{
+	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+	}
     }
     
     /**
      * Unbind the specified GL context from any texture
      */
-    public void unbind()
+    public void unbind(int index)
     {
+	GL13.glActiveTexture(GL13.GL_TEXTURE0 + index);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
     }
 
@@ -252,8 +282,7 @@ public class Texture
         System.out.print("Uploading texture " + name + " to OpenGL");
 
         // Figure out what kind of data we are working with
-        int srcPixelFormat = 0;
-        srcPixelFormat = GL11.GL_RGBA;
+        int srcPixelFormat = GL11.GL_RGBA;
 
         // build a texture ID that OpenGL can use 
         IntBuffer tmp = createIntBuffer(1);
@@ -291,7 +320,7 @@ public class Texture
      * @param texture The texture to store the data into
      * @return A buffer containing the data
      */
-    private void putImageBuffer(BufferedImage input) 
+    protected void putImageBuffer(BufferedImage input) 
     {
         // Load data in.      
         for (int y = 0; y < height; y++) 

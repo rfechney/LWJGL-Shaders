@@ -1,15 +1,37 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package Core.OpenGL;
+Copyright (c) 2011, Ryan Fechney - ryan.fechney gmail
+All rights reserved.
 
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met: 
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer. 
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution. 
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 /**
- * This class handles an OpenGL context.  All OpenGL calls should be made here.
+ * This class handles an OpenGL context.  All OpenGL setup calls should be made
+ * here.
  *
  * @author Ryan Fehcney
  */
+
+package Core.OpenGL;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -155,8 +177,8 @@ public class Window
         GL11.glClearDepth(10.0); // Depth Buffer Setup
         GL11.glEnable(GL11.GL_DEPTH_TEST); // Enables Depth Testing
         GL11.glDepthFunc(GL11.GL_LEQUAL); // The Type Of Depth Testing To Do
-        //GL11.glCullFace(GL11.GL_BACK); // Backface cull
-        //GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK); // Backface cull
+        GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glDisable(GL11.GL_CULL_FACE);
         //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA); // Set transparency maths
         GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST); // Really Nice Perspective Calculations
