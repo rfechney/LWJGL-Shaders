@@ -1,5 +1,7 @@
 This GIT repositiory holds the source to a simple set of shader routines I've written to make life a bit easier.
 
+This project will run under NetBeans, when placed inside a directory called NetBeansProjects inside your home directory.
+
 Copyright (c) 2011, Ryan Fechney - ryan.fechney gmail
 All rights reserved.
 
